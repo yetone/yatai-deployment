@@ -20,12 +20,36 @@ import (
 	autoscalingv2beta2 "k8s.io/api/autoscaling/v2beta2"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-
-	"github.com/bentoml/yatai-schemas/modelschemas"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
+
+type DeploymentTargetResourceItem struct {
+	CPU    string            `json:"cpu,omitempty"`
+	Memory string            `json:"memory,omitempty"`
+	GPU    string            `json:"gpu,omitempty"`
+	Custom map[string]string `json:"custom,omitempty"`
+}
+
+type DeploymentTargetResources struct {
+	Requests *DeploymentTargetResourceItem `json:"requests,omitempty"`
+	Limits   *DeploymentTargetResourceItem `json:"limits,omitempty"`
+}
+
+type DeploymentTargetHPAConf struct {
+	CPU         *int32  `json:"cpu,omitempty"`
+	GPU         *int32  `json:"gpu,omitempty"`
+	Memory      *string `json:"memory,omitempty"`
+	QPS         *int64  `json:"qps,omitempty"`
+	MinReplicas *int32  `json:"min_replicas,omitempty"`
+	MaxReplicas *int32  `json:"max_replicas,omitempty"`
+}
+
+type LabelItemSchema struct {
+	Key   string `json:"key"`
+	Value string `json:"value"`
+}
 
 type BentoDeploymentRunnerSpec struct {
 	Name        string                         `json:"name,omitempty"`
@@ -46,9 +70,9 @@ type BentoDeploymentSpec struct {
 
 	BentoTag string `json:"bento_tag"`
 
-	Resources   *modelschemas.DeploymentTargetResources `json:"resources,omitempty"`
-	Autoscaling *modelschemas.DeploymentTargetHPAConf   `json:"autoscaling,omitempty"`
-	Envs        *[]modelschemas.LabelItemSchema         `json:"envs,omitempty"`
+	Resources   *DeploymentTargetResources `json:"resources,omitempty"`
+	Autoscaling *DeploymentTargetHPAConf   `json:"autoscaling,omitempty"`
+	Envs        *[]LabelItemSchema         `json:"envs,omitempty"`
 
 	Runners []BentoDeploymentRunnerSpec `json:"runners,omitempty"`
 }
