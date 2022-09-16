@@ -1,4 +1,4 @@
-module github.com/bentoml/yatai-deployment
+module github.com/yetone/yatai-deployment
 
 go 1.19
 
